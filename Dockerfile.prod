@@ -1,19 +1,13 @@
-# Dockerfile.prod
+# Etapa 1 - Build do JAR
+FROM maven:3.9.4-eclipse-temurin-21-alpine AS builder
+WORKDIR /build
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Usar imagem base leve com JDK 21
+# Etapa 2 - Imagem final enxuta com apenas o JAR
 FROM eclipse-temurin:21-jdk-alpine
-
-# Diretório de trabalho dentro do container
 WORKDIR /app
-
-# Copia apenas o .jar compilado (ajuste o nome se necessário)
-COPY target/*.jar app.jar
-
-# Expor a porta padrão do Spring Boot
+COPY --from=builder /build/target/*.jar app.jar
 EXPOSE 8080
-
-# Variáveis de ambiente via docker-compose
 ENV JAVA_OPTS="-Xms256m -Xmx512m"
-
-# Comando de execução com suporte a JAVA_OPTS
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
