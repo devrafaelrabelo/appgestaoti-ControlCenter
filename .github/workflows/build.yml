@@ -25,4 +25,4 @@ jobs:
           context: .
           file: Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/devrafaelrabelo/appgestaoti-controlcenter:latest
