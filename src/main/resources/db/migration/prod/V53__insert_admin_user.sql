@@ -44,13 +44,13 @@ INSERT INTO users (
   status_id
 ) VALUES (
   '8d9e8d9f-92ab-a5b7-ff6c-889900112233', -- id
-  'Admin',                                -- first_name
-  'Teste',                                -- last_name
-  'Admin Teste',                          -- full_name
-  'Administrador',                        -- social_name
-  'adminteste',                           -- username
-  'admin@empresa.com',                    -- email
-  'admin.pessoal@gmail.com',              -- personal_email
+  'Administrator',                                -- first_name
+  'System',                                -- last_name
+  'Administrator System',                          -- full_name
+  'Administrador System',                        -- social_name
+  'appgestaoti',                           -- username
+  'appgestaoti@bemprotege.com.br',                    -- email
+  'appgestaoti.pessoal@gmail.com',              -- personal_email
   '123.456.789-00',                       -- cpf
   '1990-01-01',                           -- birth_date
   true,                                   -- email_verified
