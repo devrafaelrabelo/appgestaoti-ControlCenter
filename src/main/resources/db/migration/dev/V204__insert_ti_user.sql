@@ -1,4 +1,6 @@
--- Criação do usuário administrador comum
+/* =========================
+   Usuário do setor de TI
+   ========================= */
 SET search_path TO security;
 
 INSERT INTO users (
@@ -43,16 +45,16 @@ INSERT INTO users (
   two_factor_enabled,
   status_id
 ) VALUES (
-  '8d9e8d9f-92ab-a5b7-ff6c-889900112233', -- id
-  'Admin',                                -- first_name
-  'Teste',                                -- last_name
-  'Admin Teste',                          -- full_name
-  'Administrador',                        -- social_name
-  'adminteste',                           -- username
-  'admin@empresa.com',                    -- email
-  'admin.pessoal@gmail.com',              -- personal_email
-  '123.456.789-00',                       -- cpf
-  '1990-01-01',                           -- birth_date
+  'a3000000-0000-0000-0000-000000000001', -- id
+  'Ti',                                   -- first_name
+  'User',                                 -- last_name
+  'Ti User',                              -- full_name
+  NULL,                                   -- social_name
+  'tiuser1',                              -- username
+  'ti.user@empresa.com',                  -- email
+  'ti.user.pessoal@gmail.com',            -- personal_email
+  '100.100.100-01',                       -- cpf
+  '1991-01-01',                           -- birth_date
   true,                                   -- email_verified
   E'$2a$12$EXM5g9yGl16L1G0jLcn0EunGo57X4VB4xb4.xI9Z/QWHMg0cmeNTS', -- senha: Admin@123
   NOW(),                                  -- password_last_updated
@@ -65,10 +67,10 @@ INSERT INTO users (
   'America/Sao_Paulo',                    -- timezone
   true,                                   -- notifications_enabled
   0,                                      -- login_attempts
-  '192.168.0.10',                         -- last_password_change_ip
+  '192.168.0.22',                         -- last_password_change_ip
   NOW(),                                  -- terms_accepted_at
   '1.0',                                  -- privacy_policy_version
-  'https://cdn.app.com/avatar/admin.png', -- avatar
+  NULL,                                   -- avatar
   NOW(),                                  -- created_at
   NOW(),                                  -- updated_at
   true,                                   -- first_login
@@ -79,15 +81,12 @@ INSERT INTO users (
   false,                                  -- password_compromised
   NULL,                                   -- forced_logout_at
   'ACCEPTED',                             -- cookie_consent_status
-  '9f8e8d9f-aaaa-aaaa-bbbb-cccc00001111', -- manager_id
+  NULL,                                   -- manager_id
   NULL,                                   -- two_factor_secret
   false,                                  -- two_factor_enabled
-  '29d2d8e3-6165-4e80-a480-6ab4f6d7acd1'  -- status_id
+  '29d2d8e3-6165-4e80-a480-6ab4f6d7acd1'  -- status_id (ACTIVE)
 );
 
--- Relaciona admin com role ADMIN
-SET search_path TO security;
-INSERT INTO user_role (user_id, role_id) VALUES (
-  '8d9e8d9f-92ab-a5b7-ff6c-889900112233', -- ID do usuário admin
-  '141876fd-164b-417a-ac7e-69089703351e'  -- ID da role ADMIN
-);
+SET search_path TO "user";
+INSERT INTO user_department (user_id, department_id) VALUES
+  ('a3000000-0000-0000-0000-000000000001', '16c51bc2-2883-4077-9fdf-d625f4fcaca5'); -- TI

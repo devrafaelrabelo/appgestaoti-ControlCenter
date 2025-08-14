@@ -12,4 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class CorsProperties {
     private String[] allowedOrigins;
     private String[] allowedMethods;
+    private String[] allowedHeaders;
+    private String[] exposedHeaders;
+    private boolean allowCredentials = true;
 }
