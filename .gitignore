@@ -36,5 +36,7 @@ build/
 /.idea
 *.iml
 .env*
-application.yml
-application-*.yml
+/application.yml
+/application-*.yml
+!src/main/resources/application.yml
+!src/main/resources/application-*.yml

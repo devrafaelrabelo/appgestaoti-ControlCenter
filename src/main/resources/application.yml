@@ -1,0 +1,28 @@
+# ================================
+# Arquivo principal do Spring Boot
+# Define qual perfil está ativo
+# ================================
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:prod} # Altere para prod ou test conforme o ambiente
+
+# ================================
+# Informações da aplicação (para /actuator/info)
+# ================================
+info:
+  app:
+    name: AppGestaoTI
+    version: 1.0.0
+    description: Sistema de Gestão de TI Corporativa
+
+# ================================
+# Endpoints do Actuator
+# ================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
