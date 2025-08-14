@@ -92,3 +92,6 @@ INSERT INTO user_role (user_id, role_id) VALUES (
   '8d9e8d9f-92ab-a5b7-ff6c-889900112233', -- ID do usuário admin
   '141876fd-164b-417a-ac7e-69089703351e'  -- ID da role ADMIN
 );
+
+
+
