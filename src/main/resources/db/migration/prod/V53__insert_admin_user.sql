@@ -54,7 +54,7 @@ INSERT INTO users (
   '123.456.789-00',                       -- cpf
   '1990-01-01',                           -- birth_date
   true,                                   -- email_verified
-  E'$2b$12$8qBz8/j5G6kZy4vK.D3ZxeDCUuDlbLuw6ok7dMNMSjC0uWGLlXSoC', --
+  E'$2a$12$EXM5g9yGl16L1G0jLcn0EunGo57X4VB4xb4.xI9Z/QWHMg0cmeNTS', -- senha: Admin@123
   NOW(),                                  -- password_last_updated
   false,                                  -- account_locked
   NULL,                                   -- account_locked_at
@@ -85,12 +85,6 @@ INSERT INTO users (
   '29d2d8e3-6165-4e80-a480-6ab4f6d7acd1'  -- status_id
 );
 
--- Associa departamentos ao admin
-SET search_path TO "user";
-INSERT INTO user_department (user_id, department_id) VALUES
-  ('8d9e8d9f-92ab-a5b7-ff6c-889900112233', '16c51bc2-2883-4077-9fdf-d625f4fcaca5'), -- TI
-  ('8d9e8d9f-92ab-a5b7-ff6c-889900112233', '652b8f41-af54-4dd7-b3af-ee7b4c4d0257'), -- RH
-  ('8d9e8d9f-92ab-a5b7-ff6c-889900112233', 'dd27ef3f-3d83-4e13-9646-27b818b964eb'); -- Comercial
 
 -- Relaciona admin com role ADMIN
 SET search_path TO security;
