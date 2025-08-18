@@ -85,6 +85,12 @@ INSERT INTO users (
   '29d2d8e3-6165-4e80-a480-6ab4f6d7acd1'  -- status_id
 );
 
+-- Associa departamentos ao admin
+SET search_path TO "user";
+INSERT INTO user_department (user_id, department_id) VALUES
+  ('8d9e8d9f-92ab-a5b7-ff6c-889900112233', '16c51bc2-2883-4077-9fdf-d625f4fcaca5'), -- TI
+  ('8d9e8d9f-92ab-a5b7-ff6c-889900112233', '652b8f41-af54-4dd7-b3af-ee7b4c4d0257'), -- RH
+  ('8d9e8d9f-92ab-a5b7-ff6c-889900112233', 'dd27ef3f-3d83-4e13-9646-27b818b964eb'); -- Comercial
 
 -- Relaciona admin com role ADMIN
 SET search_path TO security;
