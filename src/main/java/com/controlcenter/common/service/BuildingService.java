@@ -3,7 +3,6 @@ package com.controlcenter.common.service;
 import com.controlcenter.common.dto.AddressDTO;
 import com.controlcenter.common.dto.BuildingDTO;
 import com.controlcenter.common.dto.BuildingUpsertDTO;
-import com.controlcenter.common.repository.AddressRepository;
 import com.controlcenter.common.repository.BuildingCompanyRepository;
 import com.controlcenter.common.repository.BuildingRepository;
 import com.controlcenter.common.repository.CompanyRepository;
@@ -23,7 +22,6 @@ public class BuildingService {
 
     private final BuildingRepository buildingRepository;
     private final BuildingCompanyRepository buildingCompanyRepository;
-    private final AddressRepository addressRepository;
     private final CompanyRepository companyRepository;
 
     @Transactional
@@ -34,9 +32,16 @@ public class BuildingService {
         entity.setDescription(dto.description());
         entity.setActive(dto.active() == null || dto.active());
 
-        if (dto.addressId() != null) {
-            Address address = addressRepository.findById(dto.addressId())
-                    .orElseThrow(() -> new IllegalArgumentException("Address not found"));
+        if (dto.address() != null) {
+            Address address = new Address();
+            address.setStreet(dto.address().getStreet());
+            address.setNumber(dto.address().getNumber());
+            address.setComplement(dto.address().getComplement());
+            address.setNeighborhood(dto.address().getNeighborhood());
+            address.setCity(dto.address().getCity());
+            address.setState(dto.address().getState());
+            address.setCountry(dto.address().getCountry());
+            address.setPostalCode(dto.address().getPostalCode());
             entity.setAddress(address);
         }
 
@@ -54,9 +59,16 @@ public class BuildingService {
         if (dto.description() != null) entity.setDescription(dto.description());
         if (dto.active() != null) entity.setActive(dto.active());
 
-        if (dto.addressId() != null) {
-            Address address = addressRepository.findById(dto.addressId())
-                    .orElseThrow(() -> new IllegalArgumentException("Address not found"));
+        if (dto.address() != null) {
+            Address address = new Address();
+            address.setStreet(dto.address().getStreet());
+            address.setNumber(dto.address().getNumber());
+            address.setComplement(dto.address().getComplement());
+            address.setNeighborhood(dto.address().getNeighborhood());
+            address.setCity(dto.address().getCity());
+            address.setState(dto.address().getState());
+            address.setCountry(dto.address().getCountry());
+            address.setPostalCode(dto.address().getPostalCode());
             entity.setAddress(address);
         }
 
