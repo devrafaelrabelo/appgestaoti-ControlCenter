@@ -28,8 +28,18 @@ public class Building {
     @Column(columnDefinition = "text")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "fk_building_address"))
+    // <<< Embutido (não é entidade, não tem FK)
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "street",       column = @Column(name = "address_street", length = 255)),
+            @AttributeOverride(name = "number",       column = @Column(name = "address_number", length = 50)),
+            @AttributeOverride(name = "complement",   column = @Column(name = "address_complement", length = 255)),
+            @AttributeOverride(name = "neighborhood", column = @Column(name = "address_neighborhood", length = 120)),
+            @AttributeOverride(name = "city",         column = @Column(name = "address_city", length = 120)),
+            @AttributeOverride(name = "state",        column = @Column(name = "address_state", length = 2)),
+            @AttributeOverride(name = "country",      column = @Column(name = "address_country", length = 120)),
+            @AttributeOverride(name = "postalCode",   column = @Column(name = "address_postal_code", length = 20))
+    })
     private Address address;
 
     @Column(nullable = false)

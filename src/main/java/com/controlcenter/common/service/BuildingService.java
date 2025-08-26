@@ -11,8 +11,10 @@ import com.controlcenter.entity.common.Building;
 import com.controlcenter.entity.common.BuildingCompany;
 import com.controlcenter.entity.common.Company;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -27,51 +29,20 @@ public class BuildingService {
     @Transactional
     public BuildingDTO create(BuildingUpsertDTO dto) {
         Building entity = new Building();
-        entity.setName(dto.name());
-        entity.setCode(dto.code());
-        entity.setDescription(dto.description());
-        entity.setActive(dto.active() == null || dto.active());
-
-        if (dto.address() != null) {
-            Address address = new Address();
-            address.setStreet(dto.address().getStreet());
-            address.setNumber(dto.address().getNumber());
-            address.setComplement(dto.address().getComplement());
-            address.setNeighborhood(dto.address().getNeighborhood());
-            address.setCity(dto.address().getCity());
-            address.setState(dto.address().getState());
-            address.setCountry(dto.address().getCountry());
-            address.setPostalCode(dto.address().getPostalCode());
-            entity.setAddress(address);
-        }
-
+        applyUpsert(dto, entity);
         entity = buildingRepository.save(entity);
         return toDTO(entity);
     }
 
+    /** Overload para o padrão “ID no JSON”. */
     @Transactional
-    public BuildingDTO update(UUID id, BuildingUpsertDTO dto) {
-        Building entity = buildingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Building not found"));
-
-        if (dto.name() != null) entity.setName(dto.name());
-        if (dto.code() != null) entity.setCode(dto.code());
-        if (dto.description() != null) entity.setDescription(dto.description());
-        if (dto.active() != null) entity.setActive(dto.active());
-
-        if (dto.address() != null) {
-            Address address = new Address();
-            address.setStreet(dto.address().getStreet());
-            address.setNumber(dto.address().getNumber());
-            address.setComplement(dto.address().getComplement());
-            address.setNeighborhood(dto.address().getNeighborhood());
-            address.setCity(dto.address().getCity());
-            address.setState(dto.address().getState());
-            address.setCountry(dto.address().getCountry());
-            address.setPostalCode(dto.address().getPostalCode());
-            entity.setAddress(address);
+    public BuildingDTO update(BuildingUpsertDTO dto) {
+        if (dto.id() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id is required");
         }
-
+        Building entity = buildingRepository.findById(dto.id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Building not found"));
+        applyUpsert(dto, entity);
         entity = buildingRepository.save(entity);
         return toDTO(entity);
     }
@@ -79,16 +50,16 @@ public class BuildingService {
     @Transactional(readOnly = true)
     public BuildingDTO get(UUID id) {
         Building entity = buildingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Building not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Building not found"));
         return toDTO(entity);
     }
 
     @Transactional
     public void linkCompany(UUID buildingId, UUID companyId) {
         Building building = buildingRepository.findById(buildingId)
-                .orElseThrow(() -> new IllegalArgumentException("Building not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Building not found"));
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found"));
 
         if (buildingCompanyRepository.existsByBuildingAndCompany(building, company)) return;
 
@@ -102,17 +73,38 @@ public class BuildingService {
     @Transactional
     public void unlinkCompany(UUID buildingId, UUID companyId) {
         Building building = buildingRepository.findById(buildingId)
-                .orElseThrow(() -> new IllegalArgumentException("Building not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Building not found"));
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found"));
 
         buildingCompanyRepository.findByBuildingAndCompany(building, company)
                 .ifPresent(buildingCompanyRepository::delete);
     }
 
+    /* ============ helpers ============ */
+
+    private void applyUpsert(BuildingUpsertDTO dto, Building entity) {
+        if (dto.name() != null)        entity.setName(dto.name());
+        if (dto.code() != null)        entity.setCode(dto.code());
+        if (dto.description() != null) entity.setDescription(dto.description());
+        if (dto.active() != null)      entity.setActive(dto.active());
+
+        if (dto.address() != null) {
+            Address a = new Address();
+            a.setStreet(dto.address().getStreet());
+            a.setNumber(dto.address().getNumber());
+            a.setComplement(dto.address().getComplement());
+            a.setNeighborhood(dto.address().getNeighborhood());
+            a.setCity(dto.address().getCity());
+            a.setState(dto.address().getState());
+            a.setCountry(dto.address().getCountry());
+            a.setPostalCode(dto.address().getPostalCode());
+            entity.setAddress(a);
+        }
+    }
+
     private BuildingDTO toDTO(Building b) {
         AddressDTO addressDTO = null;
-
         if (b.getAddress() != null) {
             Address a = b.getAddress();
             addressDTO = new AddressDTO();

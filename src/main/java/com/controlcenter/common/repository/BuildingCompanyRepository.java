@@ -13,4 +13,8 @@ public interface BuildingCompanyRepository extends JpaRepository<BuildingCompany
     boolean existsByBuildingAndCompany(Building building, Company company);
 
     Optional<BuildingCompany> findByBuildingAndCompany(Building building, Company company);
+
+    boolean existsByBuildingIdAndCompanyId(UUID buildingId, UUID companyId);
+
+    Optional<BuildingCompany> findByBuildingIdAndCompanyId(UUID buildingId, UUID companyId);
 }
