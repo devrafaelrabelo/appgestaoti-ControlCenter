@@ -43,7 +43,7 @@ public class Building {
     private Address address;
 
     @Column(nullable = false)
-    private boolean active = true;
+    private boolean active;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;

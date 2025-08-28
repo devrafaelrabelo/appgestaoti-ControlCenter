@@ -1,23 +1,16 @@
 # ================================
-# Arquivo principal do Spring Boot
-# Define qual perfil está ativo
+# App & Profiles
 # ================================
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:prod} # Altere para prod ou test conforme o ambiente
+    active: ${SPRING_PROFILES_ACTIVE:prod}
 
-# ================================
-# Informações da aplicação (para /actuator/info)
-# ================================
 info:
   app:
     name: AppGestaoTI
     version: 1.0.0
     description: Sistema de Gestão de TI Corporativa
 
-# ================================
-# Endpoints do Actuator
-# ================================
 management:
   endpoints:
     web:
@@ -26,3 +19,56 @@ management:
   endpoint:
     health:
       show-details: always
+
+# ================================
+# Integrações (para IntegrationClientRegistry)
+# ================================
+integrations:
+  clients:
+    userhub:
+      base-url: http://userhub:5001
+      token: ${USERHUB_TOKEN}
+      timeout-ms: 10000
+    ironvox:
+      base-url: http://automation-selenium:5000
+      token: ${IRONVOX_TOKEN}
+      timeout-ms: 20000
+    wpp:
+      base-url: http://wppconnect:3000
+      token: ${WPP_TOKEN}
+      timeout-ms: 5000
+
+# ================================
+# Resilience4j (um bloco por instância)
+# ================================
+resilience4j:
+  timelimiter:
+    instances:
+      userhub:
+        timeoutDuration: 10s
+      ironvox:
+        timeoutDuration: 20s
+      wpp:
+        timeoutDuration: 5s
+  circuitbreaker:
+    instances:
+      userhub:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+      ironvox:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+      wpp:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+  retry:
+    instances:
+      userhub:
+        maxAttempts: 3
+        waitDuration: 500ms
+      ironvox:
+        maxAttempts: 3
+        waitDuration: 500ms
+      wpp:
+        maxAttempts: 3
+        waitDuration: 500ms

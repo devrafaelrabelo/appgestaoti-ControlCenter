@@ -87,7 +87,7 @@ public class RegisterUser {
     private UUID managerId;
 
     @Schema(description = "Habilitação do 2FA (autenticação em dois fatores)", example = "false")
-    private Boolean twoFactorEnabled = false;
+    private Boolean twoFactorEnabled;
 
     @Schema(description = "Última localização conhecida do usuário", example = "São Paulo, SP")
     private String lastKnownLocation;
@@ -96,7 +96,7 @@ public class RegisterUser {
     private String accountSuspendedReason;
 
     @Schema(description = "E-mail verificado", example = "true")
-    private Boolean emailVerified = false;
+    private Boolean emailVerified;
 
     @Schema(description = "Data de aceite dos termos de uso")
     private LocalDate termsAcceptedAt;
