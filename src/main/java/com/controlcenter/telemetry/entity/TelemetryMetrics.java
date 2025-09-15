@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 
-@Entity @Table(name = "telemetry_metrics",
+@Entity @Table(name = "telemetry_metrics", schema = "telemetry",
         indexes = {@Index(name="idx_metric_agent_time", columnList = "agent_id,timestamp")})
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class TelemetryMetrics {

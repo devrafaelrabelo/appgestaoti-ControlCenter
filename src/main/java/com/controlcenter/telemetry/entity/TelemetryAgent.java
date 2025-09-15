@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity @Table(name = "telemetry_agent",
+        schema = "telemetry",
         uniqueConstraints = @UniqueConstraint(name="ux_host_machine", columnNames = {"hostname","machine"})
 )
 @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor

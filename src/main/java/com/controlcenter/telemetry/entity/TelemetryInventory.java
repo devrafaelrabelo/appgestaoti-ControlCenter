@@ -6,7 +6,8 @@ import org.hibernate.annotations.UuidGenerator;
 import java.time.Instant;
 import java.util.UUID;
 
-@Entity @Table(name = "telemetry_inventory")
+@Entity @Table(name = "telemetry_inventory",
+        schema = "telemetry")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class TelemetryInventory {
     @Id @UuidGenerator
