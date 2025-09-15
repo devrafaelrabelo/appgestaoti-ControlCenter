@@ -5,6 +5,13 @@ import lombok.Data;
 
 import java.util.UUID;
 
+import lombok.Builder;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.UUID;
+
 @Data
 @Builder
 public class ResourceResponse {
@@ -15,9 +22,19 @@ public class ResourceResponse {
     private String serialNumber;
     private String brand;
     private String model;
+
     private String status;
     private String type;
     private String company;
     private String currentUser;
+
     private String location;
+    private String responsibleSector;
+
+    private String origin;              // OWNED ou LEASED
+    private String lessorCompanyName;   // se LEASED
+
+    private BigDecimal price;
+    private LocalDate purchaseDate;
+    private LocalDate warrantyEndDate;
 }

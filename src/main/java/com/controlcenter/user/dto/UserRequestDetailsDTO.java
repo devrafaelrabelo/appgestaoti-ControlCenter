@@ -18,8 +18,8 @@ public class UserRequestDetailsDTO {
     private String status;
     private String birthDate;
     private String phone;
-//    private String supervisorId;
-//    private String leaderId;
+    private String supervisorId;
+    private String leaderId;
     private String cep;
     private String street;
     private String neighborhood;

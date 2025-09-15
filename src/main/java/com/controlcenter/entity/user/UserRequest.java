@@ -36,11 +36,11 @@ public class UserRequest {
     @Column(nullable = false)
     private String phone;
 
-//    @Column(nullable = false)
-//    private UUID supervisorId;
-//
-//    @Column(nullable = false)
-//    private UUID leaderId;
+    @Column(nullable = false)
+    private UUID supervisorId;
+
+    @Column(nullable = false)
+    private UUID leaderId;
 
     // Endereço
     @Column(nullable = false)

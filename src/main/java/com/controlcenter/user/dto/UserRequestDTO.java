@@ -24,8 +24,10 @@ public class UserRequestDTO {
     @NotBlank
     private String phone;
 
-//    @NotBlank
-//    private String supervisorId;
+    @NotBlank
+    private String supervisorId;
+
+    private String leaderId;
 
     @NotBlank
     private String cep;

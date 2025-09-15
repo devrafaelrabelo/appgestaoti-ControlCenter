@@ -8,6 +8,7 @@ import com.controlcenter.exceptions.exception.*;
 import com.controlcenter.entity.common.*;
 import com.controlcenter.entity.user.User;
 import com.controlcenter.resource.dto.*;
+import com.controlcenter.resource.mapper.ResourceMapper;
 import com.controlcenter.resource.repository.*;
 import com.controlcenter.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class ResourceService {
     private final CompanyRepository companyRepository;
     private final ResourceTypeRepository typeRepository;
     private final UserRepository userRepository;
+    private final ResourceMapper resourceMapper;
 
     public Page<ResourceResponse> listAll(Pageable pageable) {
         return resourceRepository.findAll(pageable).map(this::toResponse);
@@ -36,7 +38,6 @@ public class ResourceService {
         if (!exists) {
             throw new InvalidResourceStatusException("Código de status inválido: " + code);
         }
-
         return resourceRepository.findByStatus_Code(code, pageable).map(this::toResponse);
     }
 
@@ -50,26 +51,16 @@ public class ResourceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado: " + id));
     }
 
-    public ResourceResponse createResource(ResourceCreateRequest request) {
-        Resource resource = Resource.builder()
-                .id(UUID.randomUUID())
-                .name(request.getName())
-                .assetTag(request.getAssetTag())
-                .serialNumber(request.getSerialNumber())
-                .brand(request.getBrand())
-                .model(request.getModel())
-                .price(request.getPrice())
-                .purchaseDate(request.getPurchaseDate())
-                .warrantyEndDate(request.getWarrantyEndDate())
-                .location(request.getLocation())
-                .responsibleSector(request.getResponsibleSector())
-                .status(fetchStatus(request.getStatusId()))
-                .company(fetchCompany(request.getCompanyId()))
-                .resourceType(fetchType(request.getResourceTypeId()))
-                .currentUser(fetchUser(request.getCurrentUserId()))
-                .build();
+    public ResourceResponse create(ResourceDTO dto) {
+        Resource entity = resourceMapper.toEntity(dto);
 
-        return toResponse(resourceRepository.save(resource));
+        // Regras adicionais se precisar (ex: origin OWNED vs LEASED)
+        if (entity.getOrigin() == null) {
+            throw new InvalidResourceTypeException("Origem do recurso não pode ser nula");
+        }
+
+        Resource saved = resourceRepository.save(entity);
+        return toResponse(saved); // ✅ sempre retorna ResourceResponse
     }
 
     public ResourceResponse updateResource(UUID id, ResourceUpdateRequest request) {
@@ -101,6 +92,7 @@ public class ResourceService {
         resourceRepository.deleteById(id);
     }
 
+    // Helpers para validação de relacionamentos
     private ResourceStatus fetchStatus(UUID id) {
         return id == null ? null :
                 statusRepository.findById(id).orElseThrow(() ->
@@ -138,6 +130,12 @@ public class ResourceService {
                 .company(r.getCompany() != null ? r.getCompany().getName() : null)
                 .currentUser(r.getCurrentUser() != null ? r.getCurrentUser().getFullName() : null)
                 .location(r.getLocation())
+                .responsibleSector(r.getResponsibleSector())
+                .origin(r.getOrigin() != null ? r.getOrigin().name() : null)
+                .lessorCompanyName(r.getLessorCompanyName())
+                .price(r.getPrice())
+                .purchaseDate(r.getPurchaseDate())
+                .warrantyEndDate(r.getWarrantyEndDate())
                 .build();
     }
 }

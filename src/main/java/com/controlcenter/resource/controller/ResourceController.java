@@ -1,6 +1,6 @@
 package com.controlcenter.resource.controller;
 
-import com.controlcenter.resource.dto.ResourceCreateRequest;
+import com.controlcenter.resource.dto.ResourceDTO;
 import com.controlcenter.resource.dto.ResourceResponse;
 import com.controlcenter.resource.dto.ResourceUpdateRequest;
 import com.controlcenter.resource.service.ResourceService;
@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class ResourceController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de recursos paginada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Status inválido informado no filtro"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros de filtro inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @GetMapping
@@ -59,9 +60,8 @@ public class ResourceController {
             description = "Retorna os dados de um recurso específico pelo seu ID."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de recursos paginada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Status inválido informado no filtro"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado")
     })
     @GetMapping("/{id}")
     public ResponseEntity<ResourceResponse> getById(
@@ -76,15 +76,13 @@ public class ResourceController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Status, empresa, tipo ou usuário inválido"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos no corpo da requisição"),
             @ApiResponse(responseCode = "500", description = "Erro interno ao criar recurso")
     })
     @PostMapping
-    public ResponseEntity<ResourceResponse> create(
-            @RequestBody ResourceCreateRequest request
-    ) {
-        ResourceResponse response = resourceService.createResource(request);
-        return ResponseEntity.status(201).body(response);
+    public ResponseEntity<ResourceResponse> create(@Valid @RequestBody ResourceDTO dto) {
+        ResourceResponse saved = resourceService.create(dto);
+        return ResponseEntity.status(201).body(saved);
     }
 
     @Operation(
@@ -93,14 +91,14 @@ public class ResourceController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Recurso atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Status, empresa, tipo ou usuário inválido"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
             @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno ao atualizar recurso")
     })
     @PutMapping("/{id}")
     public ResponseEntity<ResourceResponse> update(
             @Parameter(description = "ID do recurso a ser atualizado") @PathVariable UUID id,
-            @RequestBody ResourceUpdateRequest request
+            @Valid @RequestBody ResourceUpdateRequest request
     ) {
         return ResponseEntity.ok(resourceService.updateResource(id, request));
     }
